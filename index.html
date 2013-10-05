@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+
+        body {
+            display: -webkit-flex;
+            -webkit-justify-content: center;
+            text-align: center;
+        }
+
+        #monitor {
+            height: 300px;
+        }
+
+        #image {
+            height: 300px;
+        }
+
+        #gallery {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <div class="container">
+        <video id="monitor" autoplay></video>
+        <div id="gallery"><img id="image"></div>
+    </div>
+    <p>
+        <button onclick="init(this)">Capture</button>
+    </p>
+</div>
+
+<canvas id="photo" style="display:none"></canvas>
+
+<script>
+    navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.getUserMedia;
+    window.URL = window.URL || window.webkitURL;
+
+    var image = document.getElementById('image');
+    var video = document.getElementById('monitor');
+    var canvas = document.getElementById('photo');
+    var gallery = document.getElementById('gallery');
+    var ctx = canvas.getContext('2d');
+
+    function init(el) {
+        el.onclick = capture;
+        el.textContent = 'Snapshot';
+        navigator.getUserMedia({video: true}, gotStream);
+    }
+
+    function capture() {
+        ctx.drawImage(video, 0, 0);
+        image.src = canvas.toDataURL('image/webp');
+    }
+
+    function gotStream(stream) {
+        video.src = window.URL.createObjectURL(stream);
+
+        video.onerror = function (e) {
+            stream.stop();
+        };
+
+        setTimeout(function () {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+        }, 50);
+    }
+
+</script>
+</body>
+</html>
