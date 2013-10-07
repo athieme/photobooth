@@ -2,63 +2,60 @@
 <html>
 <head>
     <style>
-
         body {
             display: -webkit-flex;
             -webkit-justify-content: center;
             text-align: center;
         }
 
-        #monitor {
+        #video {
             height: 300px;
         }
 
         #image {
             height: 300px;
         }
-
-        #gallery {
-            text-align: center;
-        }
     </style>
 </head>
-<body>
-
+<body onload="init()">
 <div>
-    <div class="container">
-        <video id="monitor" autoplay></video>
-        <div id="gallery"><img id="image"></div>
+    <div>
+        <video id="video" autoplay></video>
     </div>
-    <p>
-        <button onclick="init(this)">Capture</button>
-    </p>
+    <div>
+        <img id="image">
+    </div>
+    <div>
+        <button onclick="capture()">Take picture</button>
+    </div>
 </div>
-
-<canvas id="photo" style="display:none"></canvas>
+<canvas id="canvas" style="display:none"></canvas>
 
 <script>
     navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.getUserMedia;
     window.URL = window.URL || window.webkitURL;
 
     var image = document.getElementById('image');
-    var video = document.getElementById('monitor');
-    var canvas = document.getElementById('photo');
+    var video = document.getElementById('video');
+    var canvas = document.getElementById('canvas');
     var gallery = document.getElementById('gallery');
     var ctx = canvas.getContext('2d');
 
-    function init(el) {
-        el.onclick = capture;
-        el.textContent = 'Snapshot';
-        navigator.getUserMedia({video: true}, gotStream);
+    function init() {
+        navigator.getUserMedia({video: true}, stream, error);
     }
 
     function capture() {
         ctx.drawImage(video, 0, 0);
-        image.src = canvas.toDataURL('image/webp');
+//        image.src = canvas.toDataURL('image/webp');
+        image.src = canvas.toDataURL('image/png');
+        console.log(image.src);
     }
 
-    function gotStream(stream) {
+    function stream(stream) {
         video.src = window.URL.createObjectURL(stream);
+
+        stream.onended = error;
 
         video.onerror = function (e) {
             stream.stop();
@@ -68,6 +65,10 @@
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
         }, 50);
+    }
+
+    function error(e) {
+        console.log(e);
     }
 
 </script>
