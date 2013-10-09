@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+<head>
+    <style>
+
+        #canvas {
+            width: 400px;
+            height: 300px
+        }
+
+        #face {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 1;
+        }
+
+        #hole {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 2;
+        }
+
+        #frame {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 3;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div id="canvas">
+        <video autoplay id="face" height="300px" width="400px"></video>
+        <canvas id="hole" class="layer" height="300px" width="400px"></canvas>
+        <canvas id="frame" class="layer" height="300px" width="400px"></canvas>
+    </div>
+
+    <script type="text/javascript">
+
+        navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.getUserMedia;
+        window.URL = window.URL || window.webkitURL;
+
+        var faceLayer;
+        var holeLayer;
+        var frameLayer;
+        var faceCtx;
+        var holeCtx;
+        var frameCtx;
+        var x = 400;
+        var y = 300;
+        var dx = 2;
+        var dy = 4;
+        var WIDTH = 400;
+        var HEIGHT = 300;
+
+        function init() {
+
+            faceLayer = document.getElementById("face");
+            holeLayer = document.getElementById("hole");
+            holeCtx = holeLayer.getContext("2d");
+            frameLayer = document.getElementById("frame");
+            frameCtx = frameLayer.getContext("2d");
+            setTimeout(drawAll, 0);
+        }
+
+        function drawAll() {
+            drawFace();
+            drawHole();
+            drawFrame();
+        }
+
+        function drawFace() {
+            console.log("drawing face...");
+
+            navigator.getUserMedia({video: true}, stream, error);
+
+        }
+
+        function stream(stream) {
+            faceLayer.src = window.URL.createObjectURL(stream);
+
+            stream.onended = error;
+
+            faceLayer.onerror = function (e) {
+                stream.stop();
+            };
+        }
+
+        function error(e) {
+            console.log(e);
+        }
+
+        function drawHole() {
+            console.log("drawing hole...");
+            var image = new Image();
+            image.src = "./images/president_t.gif";
+            holeCtx.clearRect(0, 0, WIDTH, HEIGHT);
+            holeCtx.drawImage(image, 0, 0);
+        }
+
+        function drawFrame() {
+            console.log("drawing frame...");
+        }
+
+        init();
+
+    </script>
+</div>
+</body>
+</html>
