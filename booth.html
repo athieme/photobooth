@@ -3,30 +3,31 @@
 <head>
     <style>
 
-        #canvas {
-            width: 400px;
-            height: 300px
-        }
-
         #face {
-            position: absolute;
-            left: 0px;
-            top: 0px;
             z-index: 1;
+            position: absolute;
+            top: 100px;
+            left: 730px;
+            border: 0;
+            padding: 0;
         }
 
         #hole {
-            position: absolute;
-            left: 0px;
-            top: 0px;
             z-index: 2;
+            position: absolute;
+            top: 175px;
+            left: 635px;
+            border: 0;
+            padding: 0;
         }
 
         #frame {
-            position: absolute;
-            left: 0px;
-            top: 0px;
             z-index: 3;
+            position: absolute;
+            top: 100px;
+            left: 540px;
+            border: 0;
+            padding: 0;
         }
     </style>
 </head>
@@ -34,8 +35,8 @@
 <div>
     <div id="canvas">
         <video autoplay id="face" height="300px" width="400px"></video>
-        <canvas id="hole" class="layer" height="300px" width="400px"></canvas>
-        <canvas id="frame" class="layer" height="300px" width="400px"></canvas>
+        <canvas id="hole" width="700" height="400"></canvas>
+        <canvas id="frame" width="768" height="1024"></canvas>
     </div>
 
     <script type="text/javascript">
@@ -49,15 +50,8 @@
         var faceCtx;
         var holeCtx;
         var frameCtx;
-        var x = 400;
-        var y = 300;
-        var dx = 2;
-        var dy = 4;
-        var WIDTH = 400;
-        var HEIGHT = 300;
 
         function init() {
-
             faceLayer = document.getElementById("face");
             holeLayer = document.getElementById("hole");
             holeCtx = holeLayer.getContext("2d");
@@ -74,16 +68,12 @@
 
         function drawFace() {
             console.log("drawing face...");
-
             navigator.getUserMedia({video: true}, stream, error);
-
         }
 
         function stream(stream) {
             faceLayer.src = window.URL.createObjectURL(stream);
-
             stream.onended = error;
-
             faceLayer.onerror = function (e) {
                 stream.stop();
             };
@@ -97,12 +87,14 @@
             console.log("drawing hole...");
             var image = new Image();
             image.src = "./images/president_t.gif";
-            holeCtx.clearRect(0, 0, WIDTH, HEIGHT);
             holeCtx.drawImage(image, 0, 0);
         }
 
         function drawFrame() {
             console.log("drawing frame...");
+            var image = new Image();
+            image.src = "./images/frame_t.gif";
+            frameCtx.drawImage(image, 0, 0);
         }
 
         init();
